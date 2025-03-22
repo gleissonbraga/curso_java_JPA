@@ -34,7 +34,7 @@ public class Livro {
     @Column(name = "preco", precision = 18, scale = 2)
     private BigDecimal preco; // indicado para trabalhar com valores monetários grandes
 
-    @ManyToOne
+    @ManyToOne//(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_autor")
     private Autor autor; // definindo a chave estrangeira do ID do autor
 
