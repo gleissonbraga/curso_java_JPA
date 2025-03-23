@@ -13,7 +13,7 @@ import java.util.UUID;
 @Table(name = "autor")
 @Getter // utilizando o lombock
 @Setter
-@ToString
+@ToString(exclude = "livros")
 public class Autor {
 
     @Id
@@ -30,7 +30,7 @@ public class Autor {
     @Column(name = "nacionalidade", length = 50, nullable = false)
     private String nacionalidade;
 
-//    @OneToMany(mappedBy = "autor") // 'mappedBy' é utilizado para dizer que não é uma coluna da tabela
-    @Transient // Faz com que o JPA não considere o List<Livro> uma coluna
+//    @Transient // Faz com que o JPA não considere o List<Livro> uma coluna
+    @OneToMany(mappedBy = "autor", fetch = FetchType.LAZY) // 'mappedBy' é utilizado para dizer que não é uma coluna da tabela
     private List<Livro> livros;
 }

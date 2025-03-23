@@ -11,6 +11,7 @@ import java.util.UUID;
 @Table(name = "livro")
 @Data
 // esta anotação '@Data' possui as seguintes anotations (@Getter, @Setter, @EqualsAndHashCode, @RequiredArgsConstructor)
+@ToString(exclude = "autor")
 public class Livro {
 
     @Id
@@ -34,7 +35,9 @@ public class Livro {
     @Column(name = "preco", precision = 18, scale = 2)
     private BigDecimal preco; // indicado para trabalhar com valores monetários grandes
 
-    @ManyToOne//(cascade = CascadeType.ALL)
+    @ManyToOne(
+            fetch = FetchType.LAZY // utilizado paraer os dados do livro somente e não do autor quando é realizado o join das tabelas
+    )                  //(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_autor")
     private Autor autor; // definindo a chave estrangeira do ID do autor
 
