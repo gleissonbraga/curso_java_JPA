@@ -6,13 +6,11 @@ import com.introducao.spring_jpa.model.Livro;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @SpringBootTest
@@ -29,7 +27,7 @@ public class LivroRepositoryTest {
         Livro livro = new Livro();
         livro.setIsbn("90887-84874");
         livro.setPreco(BigDecimal.valueOf(100));
-        livro.setGenero(GeneroLivro.FICCAO);
+        livro.setGenero(GeneroLivro.CIENCIA);
         livro.setTitle("Outro Livro");
         livro.setDataPublicacao(LocalDate.of(1980, 1, 2));
 
@@ -119,13 +117,68 @@ public class LivroRepositoryTest {
 
     @Test
     public void pesquisaPorTituloTest(){
-        List<Livro> lista = repository.findByTitulo("O Roubo da casa assombrada");
+        List<Livro> lista = repository.findByTitle("O roubo da casa misteriosa");
         lista.forEach(System.out::println);
     }
 
-//    @Test
-//    public void pesquisaPorTituloTest(){
-//        List<Livro> lista = repository.findByTitulo("Roubo da casa assombrada");
-//        lista.forEach(System.out::println);
-//    }
+    @Test
+    public void pesquisaPorIsbnTest(){
+        List<Livro> lista = repository.findByIsbn("90887-84874");
+        lista.forEach(System.out::println);
+    }
+
+    @Test
+    public void pesquisaPorTituloEPreco(){
+        var preco = new BigDecimal(204.00);
+        preco = BigDecimal.valueOf(204.00);
+        var titlePesquisa = "O roubo da casa misteriosa";
+        List<Livro> lista = repository.findByTitleAndPrecoOrderByTitle(titlePesquisa, preco);
+        lista.forEach(System.out::println);
+    }
+
+    @Test
+    public void listarLivrosComQueryJPQL(){
+        var resultado = repository.listarTodosOrdenadoPorTitleAndPreco();
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    public void listarAutoresDosLivros(){
+        var resultado = repository.listarAtoresDosLivros();
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    public void listarTitulosNaoRepetidos(){
+        var resultado = repository.listarNomesDiferentesLivro();
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    public void listargenerosDeLivrosAutoresBrasileiros(){
+        var resultado = repository.listarGenerosAtoresBrasileiros();
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    void listarPorGeneroQueryParamTest(){
+        var resultado = repository.findByGenero(GeneroLivro.FICCAO, "dataPublicacao");
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    void listarPorGeneroPositionalParamTest(){
+        var resultado = repository.findByGenero(GeneroLivro.FICCAO, "dataPublicacao");
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    void deleteGeneroTest(){
+        repository.deleteByGenero(GeneroLivro.CIENCIA);
+    }
+
+    @Test
+    void updateDataPublicacaoTest(){
+        repository.updateDataPublicacao(LocalDate.of(2000, 1, 1));
+    }
 }
