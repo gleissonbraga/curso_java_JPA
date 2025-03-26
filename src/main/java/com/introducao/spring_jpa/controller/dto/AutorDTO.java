@@ -1,11 +1,15 @@
 package com.introducao.spring_jpa.controller.dto;
 
 import com.introducao.spring_jpa.model.Autor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 // DTO = Data Transfer Object
 public record AutorDTO(
+        UUID id,
         String nome,
         LocalDate dataNascimento,
         String nacionalidade) {
@@ -17,4 +21,8 @@ public record AutorDTO(
         autor.setNacionalidade(this.nacionalidade);
         return autor;
     }
+
+
 }
+
+

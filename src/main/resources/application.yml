@@ -10,6 +10,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update # ira criar o banco e vai mater os dados
+      ddl-auto: none # ira criar o banco e vai mater os dados
+#      ddl-auto: update # ira criar o banco e vai mater os dados
     properties:
       hibernate.format_sql: true # muda a forma como mostra no console a consulta sql
