@@ -7,6 +7,7 @@ import com.introducao.spring_jpa.exceptions.OperacaoNaoPermitidaException;
 import com.introducao.spring_jpa.exceptions.RegistroDuplicadoException;
 import com.introducao.spring_jpa.model.Autor;
 import com.introducao.spring_jpa.service.AutorService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,8 @@ public class AutorController {
 //    }
 
     @PostMapping
-    public ResponseEntity<Object> salvar(@RequestBody AutorDTO autor){
+    // @Valid ativa a valudação do campo do @@NotBlank e @NotNull
+    public ResponseEntity<Object> salvar(@RequestBody @Valid AutorDTO autor){
         try{
             Autor autorEntidade = autor.mapearParaAutor();
             service.salvar(autorEntidade);
@@ -104,7 +106,7 @@ public class AutorController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Object> atualizar(@PathVariable("id") String id, @RequestBody AutorDTO dto){
+    public ResponseEntity<Object> atualizar(@PathVariable("id") String id, @RequestBody @Valid AutorDTO dto){
         try {
             var idAutor = UUID.fromString(id);
             Optional<Autor> autorOptional = service.obterPorId(idAutor);
