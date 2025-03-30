@@ -2,9 +2,13 @@ package com.introducao.spring_jpa.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -12,6 +16,7 @@ import java.util.UUID;
 @Data
 // esta anotação '@Data' possui as seguintes anotations (@Getter, @Setter, @EqualsAndHashCode, @RequiredArgsConstructor)
 @ToString(exclude = "autor")
+@EntityListeners(AuditingEntityListener.class)
 public class Livro {
 
     @Id
@@ -40,5 +45,16 @@ public class Livro {
     )                  //(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_autor")
     private Autor autor; // definindo a chave estrangeira do ID do autor
+
+    @CreatedDate // quando cria um usuário preenche uma data e hora automaticamente
+    @Column(name = "data_cadastro")
+    private LocalDateTime dataCadastro;
+
+    @LastModifiedDate // quando atualiza um usuário preenche uma data e hora automaticamente
+    @Column(name = "data_atualizacao")
+    private LocalDateTime dataAtualizacao;
+
+    @Column(name = "id_usuario")
+    private UUID idUsuario;
 
 }

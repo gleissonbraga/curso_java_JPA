@@ -5,15 +5,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
 // DTO = Data Transfer Object
 public record AutorDTO(
-
         UUID id,
         @NotBlank(message = "Campo obrigatório")
         @Size(min = 2, max = 100, message = "Campo fora do tamanho padrão") // define o tamanho da string
@@ -23,8 +20,7 @@ public record AutorDTO(
         LocalDate dataNascimento,
         @NotBlank(message = "Campo obrigatório") // JSON enviado pelo body não pode ser vazio
         @Size(max = 50, min = 2, message = "Campo fora do tamanho padrão")  // define o tamanho da string
-        String nacionalidade)
-{
+        String nacionalidade) {
 
     public Autor mapearParaAutor(){
         Autor autor = new Autor();

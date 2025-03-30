@@ -12,7 +12,7 @@ select * from autor
 
 CREATE TABLE livro (
 	id uuid NOT NULL PRIMARY KEY,
-	isbn varchar(20) NOT NULL,
+	isbn varchar(20) NOT NULL UNIQUE,
 	titulo varchar(150) NOT NULL,
 	data_publicacao date NOT NULL,
 	genero varchar(30) NOT NULL,
