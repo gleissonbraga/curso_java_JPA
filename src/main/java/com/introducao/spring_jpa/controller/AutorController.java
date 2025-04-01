@@ -3,6 +3,7 @@ package com.introducao.spring_jpa.controller;
 
 import com.introducao.spring_jpa.controller.dto.AutorDTO;
 import com.introducao.spring_jpa.controller.dto.ErroResposta;
+import com.introducao.spring_jpa.controller.mappers.AutorMapper;
 import com.introducao.spring_jpa.exceptions.OperacaoNaoPermitidaException;
 import com.introducao.spring_jpa.exceptions.RegistroDuplicadoException;
 import com.introducao.spring_jpa.model.Autor;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 public class AutorController {
 
     private final AutorService service;
+    private final AutorMapper mapper;
     // O COMPONENTE @RequiredArgConstructor na hora de compilar o código cria o construtor automaticamente
 //    public AutorController(AutorService service){
 //        this.service = service;
@@ -33,16 +35,16 @@ public class AutorController {
 
     @PostMapping
     // @Valid ativa a valudação do campo do @@NotBlank e @NotNull
-    public ResponseEntity<Object> salvar(@RequestBody @Valid AutorDTO autor){
+    public ResponseEntity<Object> salvar(@RequestBody @Valid AutorDTO dto){
         try{
-            Autor autorEntidade = autor.mapearParaAutor();
-            service.salvar(autorEntidade);
+            Autor autor = mapper.toEntity(dto);
+            service.salvar(autor);
 
             // http://localhost:8080/autores/"retorna o código UUID"
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest()
                     .path("/{id}")
-                    .buildAndExpand(autorEntidade.getId())
+                    .buildAndExpand(autor.getId())
                     .toUri();
 
 
@@ -58,14 +60,14 @@ public class AutorController {
     @GetMapping("{id}")
     public ResponseEntity<AutorDTO> obterDetalhes(@PathVariable("id") String id){
         var idAutor = UUID.fromString(id);
-        Optional<Autor> autorOptional = service.obterPorId(idAutor);
-        if(autorOptional.isPresent()){
-            Autor autor = autorOptional.get();
-            AutorDTO dto = new AutorDTO(autor.getId(), autor.getNome(), autor.getDataNascimento(), autor.getNacionalidade());
-            return ResponseEntity.ok(dto);
-        }
 
-        return ResponseEntity.notFound().build();
+        return service
+                .obterPorId(idAutor)
+                .map(autor -> {
+                    AutorDTO dto = mapper.toDTO(autor);
+                    return ResponseEntity.ok(dto);
+                }).orElseGet(() -> ResponseEntity.notFound().build());
+
     }
 
     @DeleteMapping("{id}")
@@ -95,11 +97,7 @@ public class AutorController {
             @RequestParam(value = "nacionalidade") String nacionalidade){
         List<Autor> resultado = service.pesquisar(nome, nacionalidade);
         List<AutorDTO> lista = resultado.stream()
-                .map(autor -> new AutorDTO(
-                        autor.getId(),
-                        autor.getNome(),
-                        autor.getDataNascimento(),
-                        autor.getNacionalidade())
+                .map(mapper::toDTO
                 ).collect(Collectors.toList());
 
         return ResponseEntity.ok(lista);
