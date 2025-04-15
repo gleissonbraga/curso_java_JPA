@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @RequestMapping("autores")
 // localhost:8080/autores
 @RequiredArgsConstructor
-public class AutorController {
+public class AutorController implements GenericController{
 
     private final AutorService service;
     private final AutorMapper mapper;
@@ -41,12 +41,7 @@ public class AutorController {
             service.salvar(autor);
 
             // http://localhost:8080/autores/"retorna o código UUID"
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest()
-                    .path("/{id}")
-                    .buildAndExpand(autor.getId())
-                    .toUri();
-
+            URI location = gerarHeaderLocation(autor.getId());
 
 //      return new ResponseEntity("Autor salvo com sucesso! " + autor, HttpStatus.CREATED);
             return ResponseEntity.created(location).build();
